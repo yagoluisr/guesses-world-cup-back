@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { GuessDelete, GuessEntity, GuessUpdate } from "../protocols/guesses.js";
-import { allGuesses, deleteGuessById, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
+import { GuessDelete, GuessEntity, GuessUpdate, NewGuess } from "../protocols/guesses.js";
+import { allGuesses, deleteGuessById, getGuessById, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
 import { GuessDeleteSchema, guessSchema, GuessUpdateSchema } from "../schemas/guessSchema.js";
 
 export async function getGuesses (req: Request, res: Response) {
@@ -13,6 +13,18 @@ export async function getGuesses (req: Request, res: Response) {
         res.status(500).send(error.message)
     }
 
+}
+
+export async function getGuessesById(req: Request, res: Response) {
+    const user_id = req.params as NewGuess;
+
+    try {
+        const result = await getGuessById(user_id)
+        
+        res.send(result.rows)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 }
 
 export async function insertGuess (req: Request, res: Response) {

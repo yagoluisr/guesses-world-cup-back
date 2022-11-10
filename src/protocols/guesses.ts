@@ -19,5 +19,4 @@ export type GuessUpdate = {
 export type GuessDelete = {
     user_id: number,
     guess_id: number
-    
 }
