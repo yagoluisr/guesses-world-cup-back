@@ -6,3 +6,9 @@ export const guessSchema = Joi.object({
     score_s1: Joi.number().required(),
     score_s2: Joi.number().required()
 })
+
+export const GuessUpdateSchema = Joi.object({
+    guess_id: Joi.number().required(),
+    score_s1: Joi.number().required(),
+    score_s2: Joi.number().required()
+})
