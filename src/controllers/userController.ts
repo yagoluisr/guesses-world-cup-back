@@ -14,7 +14,7 @@ export async function insertUser (req: Request, res: Response) {
     }
 
     try {
-        await registerUser(name, email);
+        await registerUser({name, email});
 
         res.send('Ok')
     } catch (error) {
