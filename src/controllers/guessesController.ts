@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { GuessEntity, GuessUpdate } from "../protocols/guesses.js";
-import { allGuesses, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
-import { guessSchema, GuessUpdateSchema } from "../schemas/guessSchema.js";
+import { GuessDelete, GuessEntity, GuessUpdate } from "../protocols/guesses.js";
+import { allGuesses, deleteGuessById, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
+import { GuessDeleteSchema, guessSchema, GuessUpdateSchema } from "../schemas/guessSchema.js";
 
 export async function getGuesses (req: Request, res: Response) {
 
@@ -46,7 +46,26 @@ export async function updateGuess(req: Request, res: Response) {
     try {
         await updateGuessById(guessUpdateById);
         
-        res.send('Ok')
+        res.send('Ok');
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+export async function deleteGuess(req: Request, res: Response) {
+    const delGuess = req.body as GuessDelete;
+
+    const { error } = GuessDeleteSchema.validate(delGuess, {abortEarly: false});
+
+    if(error) {
+        const message = error.details.map(obj => obj.message)
+        return res.status(400).send(message);
+    }
+
+    try {
+        await deleteGuessById(delGuess);
+
+        res.send('Ok');
     } catch (error) {
         res.status(500).send(error.message)
     }
