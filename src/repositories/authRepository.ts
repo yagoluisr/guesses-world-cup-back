@@ -1,7 +1,7 @@
 import connection from '../database/db.js';
 
 
-export async function registerUser (name, email) {
+export async function registerUser (name: string, email: string) {
 
     const result = await connection.query(
         `INSERT INTO 
