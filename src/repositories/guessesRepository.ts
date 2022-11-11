@@ -1,7 +1,6 @@
 import { QueryResult } from "pg";
 import connection from "../database/db.js";
 import { Guess, GuessDelete, GuessEntity, GuessUpdate, NewGuess } from "../protocols/guesses.js";
-import { RegisterUserEntity } from "../protocols/user.js";
 
 
 export async function allGuesses(): Promise<QueryResult<GuessEntity>> {
@@ -9,6 +8,20 @@ export async function allGuesses(): Promise<QueryResult<GuessEntity>> {
     return connection.query(
         `SELECT * FROM guesses;`
     );
+}
+
+export async function hasGuess(guess: GuessEntity): Promise<QueryResult<GuessEntity>> {
+     return connection.query(
+        `SELECT 
+            *
+        FROM 
+            guesses
+        WHERE 
+            user_id = $1 
+            AND
+            match_id = $2;`
+        ,[guess.user_id, guess.match_id]
+     );
 }
 
 export async function getGuessById(user_id: NewGuess): Promise<QueryResult<GuessEntity[]>> {
