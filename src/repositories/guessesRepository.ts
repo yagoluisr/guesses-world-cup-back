@@ -1,6 +1,7 @@
 import { QueryResult } from "pg";
 import connection from "../database/db.js";
 import { Guess, GuessDelete, GuessEntity, GuessUpdate, NewGuess } from "../protocols/guesses.js";
+import { MatchEntity } from "../protocols/matchs.js";
 
 
 export async function allGuesses(): Promise<QueryResult<GuessEntity>> {
@@ -10,7 +11,19 @@ export async function allGuesses(): Promise<QueryResult<GuessEntity>> {
     );
 }
 
-export async function hasGuess(guess: GuessEntity): Promise<QueryResult<GuessEntity>> {
+export async function guessesStatus(userGuess: Guess): Promise<QueryResult<MatchEntity>> {
+    return connection.query(
+        `SELECT 
+            * 
+        FROM 
+            matchs 
+        WHERE 
+            id = $1;`
+        ,[userGuess.match_id]
+    );
+}
+
+export async function hasGuess(userGuess: Guess): Promise<QueryResult<GuessEntity>> {
      return connection.query(
         `SELECT 
             *
@@ -20,7 +33,7 @@ export async function hasGuess(guess: GuessEntity): Promise<QueryResult<GuessEnt
             user_id = $1 
             AND
             match_id = $2;`
-        ,[guess.user_id, guess.match_id]
+        ,[userGuess.user_id, userGuess.match_id]
      );
 }
 

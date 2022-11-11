@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { GuessDelete, GuessEntity, GuessUpdate, NewGuess } from "../protocols/guesses.js";
-import { allGuesses, deleteGuessById, getGuessById, hasGuess, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
+import { Guess, GuessDelete, GuessEntity, GuessUpdate, NewGuess } from "../protocols/guesses.js";
+import { allGuesses, deleteGuessById, getGuessById, guessesStatus, hasGuess, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
 import { GuessDeleteSchema, guessSchema, GuessUpdateSchema } from "../schemas/guessSchema.js";
 
 export async function getGuesses (req: Request, res: Response) {
@@ -27,9 +27,9 @@ export async function getGuessesById(req: Request, res: Response) {
 }
 
 export async function insertGuess (req: Request, res: Response) {
-    const guess = req.body as GuessEntity;
+    const userGuess = req.body as Guess;
 
-    const { error } = guessSchema.validate(guess,{abortEarly: false});
+    const { error } = guessSchema.validate(userGuess,{abortEarly: false});
 
     if(error) {
         const message = error.details.map(obj => obj.message)
@@ -37,11 +37,15 @@ export async function insertGuess (req: Request, res: Response) {
     }
 
     try {
-        const result = await hasGuess(guess);
+        const statusGuess = await guessesStatus(userGuess);
+
+        if(statusGuess.rows[0].guesses_status === false) return res.status(401).send('This match has been finish for guesses !')
+
+        const result = await hasGuess(userGuess);
 
         if(result.rows.length > 0) return res.status(400).send('Do you already have a guess for this match !');
 
-        await insertGuessById(guess);
+        await insertGuessById(userGuess);
 
         res.status(200).send('Ok');
     } catch (error) {
