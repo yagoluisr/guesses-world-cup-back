@@ -11,6 +11,18 @@ export async function allGuesses(): Promise<QueryResult<GuessEntity>> {
     );
 }
 
+export async function checkUser(userGuess: Guess): Promise<QueryResult<GuessEntity>> {
+    return connection.query(
+        `SELECT 
+            *
+        FROM 
+            users
+        WHERE
+            id = $1`
+        ,[userGuess.user_id]
+    );
+}
+
 export async function guessesStatus(userGuess: Guess): Promise<QueryResult<MatchEntity>> {
     return connection.query(
         `SELECT 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Guess, GuessDelete, GuessEntity, GuessUpdate, NewGuess } from "../protocols/guesses.js";
-import { allGuesses, deleteGuessById, getGuessById, guessesStatus, hasGuess, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
+import { allGuesses, checkUser, deleteGuessById, getGuessById, guessesStatus, hasGuess, insertGuessById, updateGuessById } from "../repositories/guessesRepository.js";
 import { GuessDeleteSchema, guessSchema, GuessUpdateSchema } from "../schemas/guessSchema.js";
 
 export async function getGuesses (req: Request, res: Response) {
@@ -37,6 +37,10 @@ export async function insertGuess (req: Request, res: Response) {
     }
 
     try {
+        const hasUser = await checkUser(userGuess);
+
+        if(hasUser.rows.length === 0) return res.sendStatus(400);
+
         const statusGuess = await guessesStatus(userGuess);
 
         if(statusGuess.rows[0].guesses_status === false) return res.status(401).send('This match has been finish for guesses !')
