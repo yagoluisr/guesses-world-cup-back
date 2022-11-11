@@ -29,10 +29,11 @@ export async function getGuessesById(req: Request, res: Response) {
 export async function insertGuess (req: Request, res: Response) {
     const guess = req.body as GuessEntity;
 
-    const { error } = guessSchema.validate(guess);
+    const { error } = guessSchema.validate(guess,{abortEarly: false});
 
     if(error) {
-        return res.status(400).send({message: error.message});
+        const message = error.details.map(obj => obj.message)
+        return res.status(400).send(message);
     }
 
     try {
