@@ -26,7 +26,13 @@ export async function getGuessById(user_id: NewGuess): Promise<QueryResult<Guess
 export async function insertGuessById(guess: Guess): Promise<QueryResult<GuessEntity>> {
     
     return connection.query(
-        `INSERT INTO guesses (user_id, match_id, score_s1, score_s2) VALUES ($1,$2,$3,$4);`,
+        `INSERT INTO 
+            guesses (
+                user_id, match_id, 
+                score_s1,
+                score_s2
+            ) 
+        VALUES ($1,$2,$3,$4);`,
         [guess.user_id, guess.match_id, guess.score_s1, guess.score_s2]
     );
 }

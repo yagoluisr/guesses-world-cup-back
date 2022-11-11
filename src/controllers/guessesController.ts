@@ -12,7 +12,6 @@ export async function getGuesses (req: Request, res: Response) {
     } catch (error) {
         res.status(500).send(error.message)
     }
-
 }
 
 export async function getGuessesById(req: Request, res: Response) {
