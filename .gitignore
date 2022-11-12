@@ -1,3 +1,4 @@
 /node_modules
 .env
-./queryDatabase
+queryDatabase.sql
+/dist

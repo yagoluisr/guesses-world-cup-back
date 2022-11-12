@@ -49,7 +49,7 @@ export async function hasGuess(userGuess: Guess): Promise<QueryResult<GuessEntit
      );
 }
 
-export async function getGuessById(user_id: NewGuess): Promise<QueryResult<GuessEntity[]>> {
+export async function getGuessById(user_id: NewGuess): Promise<QueryResult<GuessEntity>> {
 
     return connection.query(
         `SELECT *

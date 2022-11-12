@@ -14,7 +14,7 @@ export async function updateGuessesStatus(req: Request, res: Response) {
     }
 
     try {
-        const result = await alterGuessesStatus(matchId);
+        await alterGuessesStatus(matchId);
 
         res.send('Ok');
     } catch (error) {
