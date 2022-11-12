@@ -1,6 +1,6 @@
 import { QueryResult } from "pg";
 import connection from "../database/db.js";
-import { EndGame, Match, UpdateMatch } from "../protocols/matchs.js";
+import { EndGame, Match, MatchEntity, UpdateMatch, UpdateScoreboard } from "../protocols/matchs.js";
 
 
 export async function alterGuessesStatus(matchId: UpdateMatch): Promise<QueryResult> {
@@ -37,5 +37,18 @@ export async function finishMatch(match: EndGame): Promise<QueryResult> {
         WHERE 
             id = $3;`
         ,[match.winner, match.tied, match.match_id]
+    );
+}
+
+export async function finishScoreboard(matchData: UpdateScoreboard): Promise<QueryResult> {
+    return connection.query(
+        `UPDATE
+            scoreboard
+        SET
+            score_s1 = $1,
+            score_s2 = $2
+        WHERE
+            id = $3;`
+        ,[matchData.score_s1, matchData.score_s2, matchData.scoreboard_id]
     );
 }

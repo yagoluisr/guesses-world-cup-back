@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { EndGame, UpdateMatch } from "../protocols/matchs.js";
-import { alterGuessesStatus, checkMatch, finishMatch } from "../repositories/matchRepository.js";
+import { alterGuessesStatus, checkMatch, finishMatch, finishScoreboard } from "../repositories/matchRepository.js";
 import { UpdateMatchSchema } from "../schemas/matchSchema.js";
 
 export async function updateGuessesStatus(req: Request, res: Response) {
@@ -29,12 +29,13 @@ export async function endGame(req: Request, res: Response) {
         const hasMatch = await checkMatch(match);
 
         if(!hasMatch) return res.status(400).send('Match not found');
-        if(hasMatch.rows[0].guesses_status === true) return res.status(400).send("This game can't be finished yet");
+        if(hasMatch.rows[0]?.guesses_status === true) return res.status(400).send("This game can't be finished yet");
 
         await finishMatch(match);
+        await finishScoreboard({...match, scoreboard_id: hasMatch.rows[0].scoreboard_id});
 
-        res.send()
+        res.send('oi !')
     } catch (error) {
-        res.status(500).send(error.message)
+        res.status(500).send(error)
     }
 }
