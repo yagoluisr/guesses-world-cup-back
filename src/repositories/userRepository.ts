@@ -1,9 +1,9 @@
 import { QueryResult } from 'pg';
 import connection from '../database/db.js';
-import { RegisterUserProtocol } from '../protocols/user.js';
+import { RegisterUserEntity, RegisterUserProtocol } from '../protocols/user.js';
 
 
-export async function hasEmail(email: string): Promise<QueryResult> {
+export async function hasEmail(email: string): Promise<QueryResult<RegisterUserEntity>> {
     return connection.query(
         `SELECT * 
         FROM 
@@ -14,14 +14,14 @@ export async function hasEmail(email: string): Promise<QueryResult> {
     );
 }
 
-export async function registerUser ({name, email}: RegisterUserProtocol) {
+export async function registerUser ({name, email}: RegisterUserProtocol):Promise<QueryResult> {
 
     const result = await connection.query(
         `INSERT INTO 
             users (name, email) 
             VALUES ($1, $2);`
         ,[name, email]
-    ) 
+    );
 
-    return result.rows;
+    return result;
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { RegisterUserProtocol } from '../protocols/user.js';
-import { hasEmail, registerUser } from '../repositories/authRepository.js';
+import { hasEmail, registerUser } from '../repositories/userRepository.js';
 import { registerUserSchema } from '../schemas/userSchemas.js';
 
 
@@ -20,7 +20,9 @@ export async function insertUser (req: Request, res: Response) {
         
         await registerUser({name, email});
 
-        res.send('Ok')
+        const userId = await hasEmail(email);
+
+        res.send(userId.rows[0])
     } catch (error) {
         res.status(500).send(error.message);
     }

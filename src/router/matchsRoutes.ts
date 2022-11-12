@@ -1,8 +1,9 @@
 import express from 'express';
-import { updateGuessesStatus } from '../controllers/matchsController.js';
+import { endGame, updateGuessesStatus } from '../controllers/matchsController.js';
 
 const router = express.Router();
 
 router.put('/match', updateGuessesStatus);
+router.put('/finished/match', endGame);
 
 export default router;
