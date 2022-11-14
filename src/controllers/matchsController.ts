@@ -1,7 +1,19 @@
 import { Request, Response } from "express";
 import { EndGame, UpdateMatch } from "../protocols/matchs.js";
-import { alterGuessesStatus, checkMatch, finishMatch, finishScoreboard } from "../repositories/matchRepository.js";
+import { alterGuessesStatus, checkMatch, finishMatch, finishScoreboard, getMatche } from "../repositories/matchRepository.js";
 import { UpdateMatchSchema } from "../schemas/matchSchema.js";
+
+
+export async function allMatchs(req: Request, res: Response) {
+
+    try {
+        const matchs = await getMatche();
+        
+        res.send(matchs.rows);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
 
 export async function updateGuessesStatus(req: Request, res: Response) {
     const matchId = req.body as UpdateMatch;
@@ -18,7 +30,7 @@ export async function updateGuessesStatus(req: Request, res: Response) {
 
         res.send('Ok');
     } catch (error) {
-        res.status(500).send(error.message)
+        res.status(500).send(error.message);
     }
 }
 
@@ -34,7 +46,7 @@ export async function endGame(req: Request, res: Response) {
         await finishMatch(match);
         await finishScoreboard({...match, scoreboard_id: hasMatch.rows[0].scoreboard_id});
 
-        res.send('oi !')
+        res.send('oi !');
     } catch (error) {
         res.status(500).send(error)
     }

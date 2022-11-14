@@ -3,6 +3,12 @@ import connection from "../database/db.js";
 import { EndGame, Match, MatchEntity, UpdateMatch, UpdateScoreboard } from "../protocols/matchs.js";
 
 
+export async function getMatche(): Promise<QueryResult<MatchEntity[]>> {
+    return connection.query(
+        `SELECT * FROM matchs;`
+    );
+}
+
 export async function alterGuessesStatus(matchId: UpdateMatch): Promise<QueryResult> {
     return connection.query(
         `UPDATE 
