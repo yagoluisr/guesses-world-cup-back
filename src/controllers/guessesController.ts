@@ -38,20 +38,17 @@ export async function insertGuess (req: Request, res: Response) {
 
     try {
         const hasUser = await checkUser(userGuess);
-
         if(hasUser.rows.length === 0) return res.sendStatus(400);
 
         const statusGuess = await guessesStatus(userGuess);
-
         if(statusGuess.rows[0].guesses_status === false) return res.status(401).send('This match has been finish for guesses !')
 
         const result = await hasGuess(userGuess);
-
         if(result.rows.length > 0) return res.status(400).send('Do you already have a guess for this match !');
 
         await insertGuessById(userGuess);
 
-        res.status(200).send('Ok');
+        res.status(201).send('Ok');
     } catch (error) {
         res.status(500).send(error.message)
     }
